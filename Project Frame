@@ -1,0 +1,135 @@
+// Include everything
+
+// A Page class is a page for a user. 
+// It is the only thing that will be shown for the user to interact with.
+
+class Program {
+
+    class Page
+    {
+        // Default Constructor for a Page class;
+        // Current Usage: The default Page() is used for a new user;
+        Page();
+
+        // The Constructor for a Page class that take in a user_id;
+        // Current Usage: Generate a Page() for a user with user_id;
+        Page(User user_id);
+
+        // A list of videos that is pushed to the user in this Page();
+        std::vector<Video> video_list;
+        
+        // 
+        Video currentVideo;
+    }
+
+
+    class Screen
+    {
+        // Default Constructor for a Screen class;
+        Screen();
+
+        // Update the current_user_;
+        void updateUser(User user_id);
+
+        // Simulate 1 click and update the current_page_;
+        void clickOnce(int ith);
+
+        // Simulate n clicks and update the current_page_;
+        void clickNTimes(int n);
+
+        // The variable that sill be displayed on the screen;
+        Page current_page_;
+
+        // THe variable that states which User is using the Screen;
+        User current_user_;
+
+    }
+
+    class User
+    {
+        // Default Constructor for a User class;
+        User();
+
+        // Parameterized Constructor for a User class;
+        User(int id, std::vector<std::pair<std::string, double>> preference, int clickcount);
+
+      public:
+        // The variable that states the id (index) of the user;
+        int id;
+
+      private:
+        // The variable that defines user preference to each kind of video;
+        // Used to make automatic click on the highest matching video;
+        std::vector<std::pair<std::string, double>> preference;
+
+      public:
+        // The variable that tracks the click count of the user;
+        // Used to decide the weight on whether to change our user sculpture;
+        int clickcount;
+
+        // The variable that tracks the click record of the user;
+        // The clickrecord.size() = number of all videos;
+        // Each stored int is the time of the click the user did on the corresponding video, used to be compared with clickcount to decide
+        // whether the video can be shown again to this user;
+        std::vector<int> clickrecord;
+    }
+
+    class Video
+    {
+        Video();
+
+        Video(std::vector<std::pair<std::string, double>> tag);
+
+        // The intrinsic tag of the Video;
+        // Used to make automatic click on the highest matching video;
+        private;
+        std::vector<std::pair<std::string, double>> tag_;
+    }
+    
+    class UserVideoGraph
+    {
+        // Will CF use this graph? If not, delete
+    }
+    
+    // Used for PageRank
+    class VideoVideoGraph
+    {
+        // Used for PageRank
+        
+        // videoA_to_videoB_click_count[int videoA_id][int videoB_id] is the number of clicks from A to B;
+        std::vector<std::vector<int>> videoA_to_videoB_click_count;
+    }
+    
+    class UserUserGraph
+    {
+        // Will CF use this graph? If not, delete
+    }
+    
+    // Users in the system
+    std::vector<User> users;
+    // The Screen corresponding to the user_id;
+    std::vector<Screen> userScreen;
+    
+    // Allocate the new_user in the frontest location in the users vector;
+    addUser(User new_user);
+
+}
+
+
+
+### List of Classes
+#### 1. Page Class  
+**Usage:** Where we generate the page for a user. Should be controlled only by Control Class.
+**Member Functions:**  
+Page(): Create a page for a new user and add that user to the user class.
+Page(int uid): Create a page for existing user *uid*.
+std::vector&lt;int&gt; iterate(): Iterate 1 step and return a new vector of video ids to be rendered on the page.  
+void click(int vid): User click on the video with index *vid* at the current iteration.  
+
+
+#### 2. User Class  
+**Usage:** The user class containing a user's all visiting records.
+   
+#### 3. Video Class  
+
+#### 4. Control Class
