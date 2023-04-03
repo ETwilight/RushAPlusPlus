@@ -4,58 +4,72 @@
 #include <map>
 #include <set>
 #include <algorithm>
+#include <Video.h>
 
-namespace RecommendationAlgorithms
+namespace VideoRecommendation
 {
-    //Content-based recommendation algorithm
+    //typealias
+    using VideoId = int;
+    using UserId = int;
+    using UserHistory = std::map<UserId, std::vector<VideoId>>;
+
+    // Collaborative Filtering
     class ContentBasedFiltering
     {
-        double jaccard_similarity(const std::set<std::string> &set1, const std::set<std::string> &set2)
+        double jaccard_similarity(const std::vector<VideoId> &history1, const std::vector<VideoId> &history2)
         {
-            size_t intersection_count = 0;
-            size_t union_count = 0;
+            std::set<VideoId> set1(history1.begin(), history1.end());
+            std::set<VideoId> set2(history2.begin(), history2.end());
 
-            for (const auto &element : set1)
+            std::vector<VideoId> intersection;
+            std::set_intersection(set1.begin(), set1.end(), set2.begin(), set2.end(), std::back_inserter(intersection));
+
+            std::vector<VideoId> union_set;
+            std::set_union(set1.begin(), set1.end(), set2.begin(), set2.end(), std::back_inserter(union_set));
+
+            if (union_set.size() == 0)
             {
-                if (set2.find(element) != set2.end())
-                {
-                    intersection_count++;
-                }
-                union_count++;
+                return 0.0;
             }
 
-            for (const auto &element : set2)
-            {
-                if (set1.find(element) == set1.end())
-                {
-                    union_count++;
-                }
-            }
-
-            return static_cast<double>(intersection_count) / static_cast<double>(union_count);
+            return static_cast<double>(intersection.size()) / static_cast<double>(union_set.size());
         }
-        std::vector<int> recommend_videos(const std::vector<Video> &videos, int target_video_id, int top_k)
+        std::vector<VideoId> recommend_videos(const UserHistory &user_history, UserId target_user, int top_k, int k_nearest_neighbors)
         {
-            std::vector<std::pair<int, double>> similarity_scores;
+            std::vector<std::pair<UserId, double>> user_similarities;
 
-            for (size_t i = 0; i < videos.size(); i++)
+            for (const auto &other_user_history : user_history)
             {
-                if (i == target_video_id)
+                if (other_user_history.first == target_user)
                 {
                     continue;
                 }
-
-                double similarity = jaccard_similarity(videos[target_video_id].tags, videos[i].tags);
-                similarity_scores.push_back(std::make_pair(i, similarity));
+                double similarity = jaccard_similarity(user_history.at(target_user), other_user_history.second);
+                user_similarities.push_back(std::make_pair(other_user_history.first, similarity));
             }
 
-            std::sort(similarity_scores.begin(), similarity_scores.end(), [](const std::pair<int, double> &a, const std::pair<int, double> &b)
+            std::sort(user_similarities.begin(), user_similarities.end(), [](const std::pair<UserId, double> &a, const std::pair<UserId, double> &b)
                       { return a.second > b.second; });
 
-            std::vector<int> recommendations;
-            for (int i = 0; i < top_k && i < static_cast<int>(similarity_scores.size()); i++)
+            std::vector<VideoId> recommendations;
+            int neighbors_count = 0;
+
+            for (const auto &user_similarity : user_similarities)
             {
-                recommendations.push_back(similarity_scores[i].first);
+                if (neighbors_count >= k_nearest_neighbors)
+                {
+                    break;
+                }
+
+                for (const auto &video_id : user_history.at(user_similarity.first))
+                {
+                    if (std::find(user_history.at(target_user).begin(), user_history.at(target_user).end(), video_id) == user_history.at(target_user).end())
+                    {
+                        recommendations.push_back(video_id);
+                        neighbors_count++;
+                        break;
+                    }
+                }
             }
 
             return recommendations;
