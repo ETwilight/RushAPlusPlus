@@ -13,4 +13,4 @@ class Program::Page
         
     // 
     Video currentVideo;
-}
+};
