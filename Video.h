@@ -1,4 +1,7 @@
-class Program::Video
+#include <vector>
+#include <string>
+
+class Video
 {
     Video();
 
@@ -6,7 +9,7 @@ class Program::Video
 
     // The intrinsic tag of the Video;
     // Used to make automatic click on the highest matching video;
-    private;
+    private:
     std::string name_;
     std::vector<std::pair<std::string, double>> tag_;
 };
