@@ -1,4 +1,7 @@
-class Program::User
+#include <vector>
+#include <string>
+
+class User
 {
     // Default Constructor for a User class;
     User();

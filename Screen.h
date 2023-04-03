@@ -1,4 +1,7 @@
-class Program::Screen
+#include "Page.h"
+#include "User.h"
+
+class Screen
 {
     // Default Constructor for a Screen class;
     Screen();

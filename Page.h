@@ -1,4 +1,9 @@
-class Program::Page
+#include <vector>
+#include <string>
+#include "User.h"
+#include "Video.h"
+
+class Page
 {
     // Default Constructor for a Page class;
     // Current Usage: The default Page() is used for a new user;
