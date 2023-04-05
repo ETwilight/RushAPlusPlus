@@ -63,3 +63,51 @@ class User{
         std::vector<std::string> history_;
 
 };
+
+#include<string>
+#include<vector>
+#include<map>
+
+class VideDatabase{
+    public:
+        VideDatabase();
+
+        std::string Get_tag();
+
+        VideDatabase(std::string file);
+
+        VideDatabase(std::vector<std::pair<std::string, double>> tag);
+
+        std::string get_category(int label);
+
+        // The intrinsic tag of the Video;
+        // Used to make automatic click on the highest matching video;
+    private:
+        std::vector<std::pair<std::string, int>> videos_n_id_;
+        std::vector<std::pair<std::string, std::string>> videos_n_category_;
+        std::vector<std::string> video_names_;
+        std::vector<std::string> video_categories_;
+        std::vector<int> video_ids_;
+};
+
+class UserDatabase{
+    public:
+        UserDatabase();
+        UserDatabase(std::string id, std::vector<std::string> vid_list, int click_count);
+        class EachUser{
+            public:
+                EachUser();
+                EachUser(std::vector<std::string> videos_n_category, std::vector<std::string> videos_n_id);
+                std::string getId();
+                std::vector<std::pair<std::string, double>> getPreference();
+                std::vector<std::string> getHistory();
+            private:
+                std::string user_id_;
+                std::vector<std::string> history_;
+                std::vector<std::pair<std::string, double>> preference_;
+
+        };
+        
+    private:
+        std::vector<UserDatabase::EachUser> all_user;
+};
